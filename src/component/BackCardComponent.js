@@ -1,10 +1,10 @@
 import React from "react";
 
-const BackCardComponent = _ =>
+const BackCardComponent = (props) =>
     <div className="cardBack dimension--tarjeta">
         <div className="lectora"></div>
         <div className="cvc-container">
-            <span>000</span>
+            <span>{props.cvc.cvc}</span>
         </div>
         <div className="linea-adicional">
             ______ __ __ _<br/>

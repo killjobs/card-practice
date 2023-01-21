@@ -111,26 +111,29 @@
   margin: 0 auto;
 }
 
-.cardForm div > input[type="text"]{
+.cardForm div input[type="text"]{
   width: 50px;
   height: 30px;
   border-radius: 3px;
 }
 
-.cardForm div > div {
+.cardForm div div:first-child {
   display: inline-block;
 }
 
-.cardForm div > div {
+.cardForm div  div {
+  display: inline-block;
   width: 240px;
 }
 
-.cardForm div > div> p {
+
+.cardForm div div p {
   margin-top: 0;
 }
 
-.cardForm div > div> p+div, .cardForm div > div> div:last-child  {
-  width: 50%;
+.cardForm div div p+div, 
+.cardForm div div div  {
+  width: 48%;
 }
 
 
@@ -154,5 +157,15 @@ button:last-child{
   border-radius: 3px;
   background-color: #220930;
   color: hsl(0, 0%, 100%);
+}
+
+span[required]::before {
+  content: 'Este campo es requerido *';
+  color: red;
+  display: block;
+}
+
+input[required] {
+  border-color: red;
 }
 
