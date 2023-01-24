@@ -9,8 +9,8 @@ function CardComponent(props){
                 
             </div>
             <div>
-                <span>{props.cardNumber.cardNumber}</span><br/>
-                <span>{props.clientName.clientName}</span><span>{props.dateYY.dateYY}/{props.dateMM.dateMM}</span>
+                <span>{props.clientName.clientName}</span><br/>
+                <span>{props.cardNumber.cardNumber}</span><span>{props.dateYY.dateYY}/{props.dateMM.dateMM}</span>
             </div>
         </div>
     );

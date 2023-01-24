@@ -1,5 +1,6 @@
-import React,{ useRef, useContext,useState } from "react";
-import { CardNumberContext } from "./CardNumberContext";
+import React,{useRef} from "react"; //, useContext 
+import {REGULAR_EXPRESSIONS , STYLE_ERRORS} from "../common/constants";
+//import { CardNumberContext } from "./CardNumberContext";
 
 function CardFormComponent(props){
     //const [cardNumberValue, setCardNumberValue] = useContext(CardNumberContext);
@@ -10,34 +11,46 @@ function CardFormComponent(props){
     const expDateYY = useRef(null);
     const cvc = useRef(null);
     const dataForm = useRef(null);
-    const createCard = function(){
-        console.log("datos formulario: "+ dataForm);        
+    let styleError = {
+        cardholderName: STYLE_ERRORS.DEFAULT_ERROR,
+        cardNumber: STYLE_ERRORS.DEFAULT_ERROR,
+        expDate: STYLE_ERRORS.DEFAULT_ERROR,
+        cvc: STYLE_ERRORS.DEFAULT_ERROR
     }
 
     const validText = function(e){
-        let inputValue = e.target.name;
-        let textValue = e.nativeEvent.target.value;
-        e.nativeEvent.target.value = textValue.replace(/[0-9]/g, '');
 
-        if(inputValue=="cardholderName"){
-            props.UpdateCardNumber(e.nativeEvent.target.value);
+        let inputValue = e.target.name;
+        let textValue = e.target.value;
+        let value = false;
+        e.target.value = textValue.replace(/[0-9]/g, '');
+
+        if(inputValue === "cardholderName"){
+            REGULAR_EXPRESSIONS.CARDHOLDERNAME.test(e.target.value) ? value = true : value = false;
+            value ? styleError.cardholderName = STYLE_ERRORS.PRESENTATION_ERROR : styleError.cardholderName = STYLE_ERRORS.DEFAULT_ERROR;
+            console.log(`valor: ${styleError.cardholderName}- ${value}`)
+            props.UpdateCardName(e.target.value,value);
         }
     }
 
     const validNumber = function(e){
-        let textValue = e.nativeEvent.target.value;
+        let textValue = e.target.value;
         let inputValue = e.target.name;
-        e.nativeEvent.target.value = textValue.replace(/[\s\D]/g, '');
+        let value = false;
+        e.target.value = textValue.replace(/[\s\D]/g, '');
 
         switch (inputValue) {
             case "expDateMM":
-                props.UpdateExpDateMM(e.nativeEvent.target.value);
+                REGULAR_EXPRESSIONS.EXPDATEMM.test(e.target.value) ? value = true : value = false;
+                props.UpdateExpDateMM(e.target.value,value);
                 break;
             case "expDateYY":
-                props.UpdateExpDateYY(e.nativeEvent.target.value);
+                REGULAR_EXPRESSIONS.EXPDATEYY.test(e.target.value) ? value = true : value = false;
+                props.UpdateExpDateYY(e.target.value,value);
                 break;
             case "cvc":
-                props.UpdateCvc(e.nativeEvent.target.value);
+                REGULAR_EXPRESSIONS.CVC.test(e.target.value) ? value = true : value = false;
+                props.UpdateCvc(e.target.value,value);
                 break;
             default:
                 break;
@@ -45,52 +58,60 @@ function CardFormComponent(props){
     }
 
     const validCard = function(e){
-        let cardValue = e.nativeEvent.target.value;
-        e.nativeEvent.target.value = cardValue 
+        let cardValue = e.target.value;
+        let value = false;
+        
+        e.target.value = cardValue 
             .replace(/\s/g, '')
             .replace(/\D/g, '')
             .replace(/([0-9]{4})/g, '$1 ')
             .trim();
-
-        props.UpdateCardNumber(e.nativeEvent.target.value);
+        
+        REGULAR_EXPRESSIONS.CARDNUMBER.test(e.target.value) ? value = true : value = false;
+        props.UpdateCardNumber(e.target.value,value);
     };
 
     const formValidation = function(e){
         e.preventDefault();
-        console.log(dataForm);
-        Object.values(dataForm.current).forEach((element) => {
+        console.log(dataForm.current);
+        Object.values(dataForm.current).forEach((element,index) => {
 
-            console.log("Texto: " + element.value + " - " + element.validity.valid);
+            console.log(`Texto ${index}: ${element.value}`);
             
 
             
-            console.log(element.type, " - ", element.value);
+            /*console.log(element.type, " - ", element.value);
            if (element.type === 'text' && (element.value === null || element.value === "" ) ) {
             console.log(element.parentNode.children[0]);
             element.setAttribute('required', '');
             element.parentNode.children[0].setAttribute('required', '');
-           }
+           }*/
 
         });
         
     };
 
+    const handleSubmit = function(event){
+        alert('A name was submitted: ');
+        event.preventDefault();
+    }
+
     return (
         <div className="cardForm">
-            <form ref={dataForm} onSubmit={formValidation} >
+            <form ref={dataForm} onSubmit={handleSubmit} >
                 <span>cardholder name</span><br/>
                 <input type="text" name="cardholderName" ref={cardholderName} 
                     placeholder="e.g. Jane Appleseed" 
                     onKeyUp={validText}
                     maxLength="25"
                     minLength="10"/>
-                <span htmlFor ="cardholderName">A</span><br/>
+                <span htmlFor ="cardholderName" className = {styleError.cardholderName}>A</span><br/>
                 <span>card number</span><br/>
                 <input type="text" name="cardNumber" ref={cardNumber}
                     placeholder="e.g. 1234 5678 9123 0000" 
                     maxLength="19"
                     onKeyUp={validCard}/>
-                <span htmlFor ="cardNumber">B</span>
+                <span htmlFor ="cardNumber" className = {styleError.cardNumber}>B</span>
                 <div>
                     <div>
                         <div>
@@ -98,24 +119,23 @@ function CardFormComponent(props){
                             <input type="text" name="expDateMM" ref={expDateMM} 
                                 placeholder="MM" onKeyUp={validNumber}
                                 maxLength="2" pattern="^0{1}[1-9]|^1+[0-2]"/><br/>
-                            <span htmlFor ="expDateMM">C</span>
                         </div>
                         <div>
                             <input type="text" name="expDateYY" ref={expDateYY} 
                                 placeholder="YY" onKeyUp={validNumber} 
                                 maxLength="2"/><br/>
-                            <span htmlFor ="expDateYY">D</span>
                         </div>
+                        <span htmlFor ="expDate" className = {styleError.expDate}>D</span>
                     </div>
                      
                     <div className="cvcStyle">
                         <span>cvc</span>
                         <input type="text" name="cvc" ref={cvc} placeholder="e.g. 123" 
                             onKeyUp={validNumber} maxLength="3"/><br/>
-                        <span htmlFor ="cvc">E</span>
+                            <span htmlFor ="cvc" className = {styleError.cvc}>E</span>
                     </div>
                 </div>
-                <button onSubmit={createCard}>Confirm</button>
+                <button>Confirm</button>
                 {
                 /**
                      <button onClick= { () => actionButton(`

@@ -1,46 +1,43 @@
-import React, {useContext, useState} from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react'; //useContext
+//import logo from './logo.svg';
 import './App.css';
 import CardComponent from './component/CardComponent';
 import CardFormComponent from './component/CardFormComponent';
 import BackCardComponent from './component/BackCardComponent';
-import cardFront from './assets/images/bg-card-front.png';
-import CardNumberProvider,{CardNumberContext} from './component/CardNumberContext';
-
+import CardNumberProvider from './component/CardNumberContext'; //{CardNumberContext}
+import { DEFAULT_VALUES } from './common/constants';
 function App() {
-  const defaultCardName = "0000 0000 0000 0000";
-  const dafaultCardNumber = "jaime applessed";
-  const defaultDateYY = "YY";
-  const defaultDateMM = "MM";
-  const defaultCvc = "000";
+
   //const [cardNumberValue, setCardNumberValue] = useContext(CardNumberContext);
-  const [cardNumberValue, setCardNumberValue] = useState({cardNumber:dafaultCardNumber});
-  const [clientNameValue, setClientNameValue] = useState({clientName:defaultCardName});
-  const [expDateYYValue, setExpDateYYValue] = useState({dateYY:defaultDateYY});
-  const [expDateMMValue,setExpDateMMValue] = useState({dateMM:defaultDateMM});
-  const [cvcValue,setCvcValue] = useState({cvc:defaultCvc});
+  const [cardNumberValue, setCardNumberValue] = useState({cardNumber:DEFAULT_VALUES.dafaultCardNumber, valido:null});
+  const [clientNameValue, setClientNameValue] = useState({clientName:DEFAULT_VALUES.defaultCardName, valido:null});
+  const [expDateYYValue, setExpDateYYValue] = useState({dateYY:DEFAULT_VALUES.defaultDateYY, valido:null});
+  const [expDateMMValue,setExpDateMMValue] = useState({dateMM:DEFAULT_VALUES.defaultDateMM, valido:null});
+  const [cvcValue,setCvcValue] = useState({cvc:DEFAULT_VALUES.defaultCvc, valido:null});
+  
+  const UpdateClientNameValue = (_field,_expression) =>{
+    _field.length === 0 ? setClientNameValue({clientName:DEFAULT_VALUES.defaultCardName, valido:null}) : setClientNameValue({clientName:_field,valido:_expression});
+
+  }
+  
   const datosFormulario = (formulario) =>{
     alert("funcion: "+ formulario);
   };
-  
-  const UpdateClientNameValue = (e) =>{
-    e.length == 0 ? setClientNameValue({clientName:defaultCardName}) : setClientNameValue({clientName:e});
+
+  const UpdateCardNumberValue = (_field,_expression) =>{
+    _field.length === 0 ? setCardNumberValue({cardNumber:DEFAULT_VALUES.dafaultCardNumber, valido:null}) : setCardNumberValue({cardNumber:_field,valido:_expression});
   }
 
-  const UpdateCardNumberValue = (e) =>{
-    e.length == 0 ? setCardNumberValue({cardNumber:dafaultCardNumber}) : setCardNumberValue({cardNumber:e});
+  const UpdateExpDateYYValue = (_field,_expression) =>{
+    _field.length === 0 ? setExpDateYYValue({dateYY:DEFAULT_VALUES.defaultDateYY, valido:null}) : setExpDateYYValue({dateYY:_field,valido:_expression});
   }
 
-  const UpdateExpDateYYValue = (e) =>{
-    e.length == 0 ? setExpDateYYValue({dateYY:defaultDateYY}) : setExpDateYYValue({dateYY:e});
+  const UpdateExpDateMMValue = (_field,_expression) =>{
+    _field.length === 0 ? setExpDateMMValue({dateMM:DEFAULT_VALUES.defaultDateMM, valido:null}) : setExpDateMMValue({dateMM:_field,valido:_expression});
   }
 
-  const UpdateExpDateMMValue = (e) =>{
-    e.length == 0 ? setExpDateMMValue({dateMM:defaultDateMM}) : setExpDateMMValue({dateMM:e});
-  }
-
-  const UpdateCvcValue = (e) =>{
-    e.length == 0 ? setCvcValue({cvc:defaultCvc}) : setCvcValue({cvc:e});
+  const UpdateCvcValue = (_field,_expression) =>{
+    _field.length === 0 ? setCvcValue({cvc:DEFAULT_VALUES.defaultCvc, valido:null}) : setCvcValue({cvc:_field,valido:_expression});
   }
 
   return (

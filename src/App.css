@@ -169,3 +169,11 @@ input[required] {
   border-color: red;
 }
 
+.default-error{
+  display: none;
+}
+
+.presentation-error{
+  display: block !important;
+  color: red;
+}
